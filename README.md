@@ -23,14 +23,14 @@ flowchart LR
 
 | Item | Built-in agent team / subagent | Swarm Mode |
 | --- | --- | --- |
-| Role | execution primitive | orchestration layer on top |
-| Worker split | ad hoc per run | lane-based and explicit |
-| Model choice | manual / prompt-time | routed by `config/model-routing.json` |
-| Risk control | depends on operator | escalation rules built in |
-| Repo compatibility | no default policy check | checks repo override before spawn |
-| Cleanup | manual habit | workflow rule, optional assert-clean |
+| What it is | built-in worker capability | a management layer for multi-agent runs |
+| Task split | decided on the fly each run | split into clear lanes before spawning |
+| Model choice | chosen manually in the prompt | chosen by `config/model-routing.json` |
+| Risk handling | depends on the operator | risky work is escalated back automatically |
+| Repo rules | no built-in repo policy check | checks repo overrides before spawning |
+| Cleanup | easy to forget | part of the workflow, can assert-clean |
 
-一句话：内置 subagent 解决“能不能并发”，Swarm Mode 解决“并发怎么稳定落地”。
+一句话：内置 subagent 是“派人干活”的能力，Swarm Mode 是“怎么派、谁来兜底、最后怎么收尾”的规则层。
 
 ## Advantages
 
