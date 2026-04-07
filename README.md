@@ -8,16 +8,7 @@ Swarm Mode 是一个用于蜂群式编排的 Codex Skill。
 
 ## 一图看懂
 
-```mermaid
-flowchart LR
-    A["Codex 内置 Subagent"] --> B["能派 Worker"]
-    B --> C["每次都要自己决定 Prompt / 模型 / 收尾"]
-    D["Swarm Mode"] --> E["复用内置 Worker"]
-    E --> F["补上统一路由策略"]
-    E --> G["补上 Lane 分工"]
-    E --> H["补上风险升级规则"]
-    E --> I["补上清理和收尾约束"]
-```
+![Swarm Mode 一图看懂](docs/at-a-glance.svg)
 
 ## 内置能力 vs Swarm Mode
 

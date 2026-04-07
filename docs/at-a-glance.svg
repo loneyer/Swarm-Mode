@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Swarm Mode 一图看懂</title>
+  <desc id="desc">对比 Codex 内置 Subagent 与 Swarm Mode 的静态流程图。</desc>
+  <defs>
+    <style>
+      .box {
+        fill: #f3f0ff;
+        stroke: #8b5cf6;
+        stroke-width: 2;
+        rx: 16;
+      }
+      .label {
+        fill: #111827;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 28px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+      .small {
+        font-size: 26px;
+      }
+      .line {
+        fill: none;
+        stroke: #1f2937;
+        stroke-width: 2.5;
+        marker-end: url(#arrow);
+      }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937" />
+    </marker>
+  </defs>
+
+  <rect class="box" x="70" y="70" width="300" height="88" />
+  <text class="label" x="220" y="114">Codex 内置 Subagent</text>
+
+  <rect class="box" x="460" y="80" width="210" height="70" />
+  <text class="label" x="565" y="115">能派 Worker</text>
+
+  <rect class="box" x="760" y="52" width="360" height="126" />
+  <text class="label small" x="940" y="102">每次都要自己决定 Prompt</text>
+  <text class="label small" x="940" y="140">模型 / 收尾</text>
+
+  <path class="line" d="M 370 114 L 460 114" />
+  <path class="line" d="M 670 115 L 760 115" />
+
+  <rect class="box" x="110" y="392" width="220" height="88" />
+  <text class="label" x="220" y="436">Swarm Mode</text>
+
+  <rect class="box" x="440" y="396" width="270" height="80" />
+  <text class="label" x="575" y="436">复用内置 Worker</text>
+
+  <path class="line" d="M 330 436 L 440 436" />
+
+  <rect class="box" x="820" y="252" width="280" height="72" />
+  <text class="label" x="960" y="288">补上统一路由策略</text>
+
+  <rect class="box" x="820" y="358" width="250" height="72" />
+  <text class="label" x="945" y="394">补上 Lane 分工</text>
+
+  <rect class="box" x="820" y="464" width="280" height="72" />
+  <text class="label" x="960" y="500">补上风险升级规则</text>
+
+  <rect class="box" x="820" y="570" width="320" height="72" />
+  <text class="label" x="980" y="606">补上清理和收尾约束</text>
+
+  <path class="line" d="M 710 436 C 760 380, 760 330, 820 288" />
+  <path class="line" d="M 710 436 C 760 418, 770 404, 820 394" />
+  <path class="line" d="M 710 436 C 760 454, 770 486, 820 500" />
+  <path class="line" d="M 710 436 C 760 500, 765 560, 820 606" />
+</svg>
