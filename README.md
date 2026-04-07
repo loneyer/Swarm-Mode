@@ -1,38 +1,38 @@
 # Swarm Mode
 
-Swarm Mode is a Codex skill for swarm-style orchestration.
+Swarm Mode 是一个用于蜂群式编排的 Codex Skill。
 
-It keeps one main orchestrator, splits work into parallel lanes, caps active workers at 30, and routes each lane through a shared model policy in `config/model-routing.json`.
+它会保留一个主 orchestrator，把任务拆成并行 lane，把活跃 worker 上限控制在 30 个以内，并通过 `config/model-routing.json` 统一做模型路由。
 
-> Based on a secondary development of [huaqiang-huang/codex-swarm-mode-skill](https://github.com/huaqiang-huang/codex-swarm-mode-skill).
+> 基于 [huaqiang-huang/codex-swarm-mode-skill](https://github.com/huaqiang-huang/codex-swarm-mode-skill) 二次开发。
 
-## At A Glance
+## 一图看懂
 
 ```mermaid
 flowchart LR
-    A["Codex Built-in Subagents"] --> B["Can Spawn Workers"]
-    B --> C["You Decide Prompt / Model / Cleanup Each Run"]
-    D["Swarm Mode"] --> E["Uses Built-in Workers"]
-    E --> F["Adds Routing Policy"]
-    E --> G["Adds Lane Ownership"]
-    E --> H["Adds Escalation Rules"]
-    E --> I["Adds Cleanup Guard"]
+    A["Codex 内置 Subagent"] --> B["能派 Worker"]
+    B --> C["每次都要自己决定 Prompt / 模型 / 收尾"]
+    D["Swarm Mode"] --> E["复用内置 Worker"]
+    E --> F["补上统一路由策略"]
+    E --> G["补上 Lane 分工"]
+    E --> H["补上风险升级规则"]
+    E --> I["补上清理和收尾约束"]
 ```
 
-## Built-in vs Swarm Mode
+## 内置能力 vs Swarm Mode
 
-| Item | Built-in agent team / subagent | Swarm Mode |
+| 对比项 | 内置 agent team / subagent | Swarm Mode |
 | --- | --- | --- |
-| What it is | built-in worker capability | a management layer for multi-agent runs |
-| Task split | decided on the fly each run | split into clear lanes before spawning |
-| Model choice | chosen manually in the prompt | chosen by `config/model-routing.json` |
-| Risk handling | depends on the operator | risky work is escalated back automatically |
-| Repo rules | no built-in repo policy check | checks repo overrides before spawning |
-| Cleanup | easy to forget | part of the workflow, can assert-clean |
+| 它是什么 | 内置的 worker 能力 | 多代理协作的管理层 |
+| 怎么拆任务 | 每次临时决定 | 派发前先拆清楚 lane |
+| 怎么选模型 | 靠当次 prompt 手动指定 | 按 `config/model-routing.json` 统一路由 |
+| 风险怎么处理 | 取决于操作者经验 | 高风险任务自动升回主 orchestrator |
+| 仓库规则怎么处理 | 没有默认检查 | 派发前先检查 repo override |
+| 怎么收尾 | 容易忘 | 流程内置，可做 assert-clean |
 
 一句话：内置 subagent 是“派人干活”的能力，Swarm Mode 是“怎么派、谁来兜底、最后怎么收尾”的规则层。
 
-## Advantages
+## 优势
 
 - 更稳：先分 lane，再选模型，再派角色，减少乱派和重叠写入
 - 更省：把高判断任务留给强模型，把窄范围任务下放到低成本模型
@@ -41,13 +41,13 @@ flowchart LR
 
 适用场景：当你只需要 1 到 2 个临时 helper 时，内置 subagent 通常够用；当你要长期、多次、成体系地跑多代理协作时，Swarm Mode 更合适。
 
-## Files
+## 文件结构
 
-- `SKILL.md`: main skill definition and operating rules
-- `config/model-routing.json`: routing profiles, escalation rules, and role policy
-- `agents/openai.yaml`: agent metadata and default prompt
-- `references/prompt-templates.md`: reusable prompt scaffolds for main-agent and worker lanes
+- `SKILL.md`：主技能定义和工作规则
+- `config/model-routing.json`：路由档位、升级规则和角色策略
+- `agents/openai.yaml`：agent 元信息和默认 prompt
+- `references/prompt-templates.md`：主 agent / worker 的提示词模板
 
-## Usage
+## 使用方式
 
-Install this skill into your Codex profile, then invoke `$swarm-mode` when you want Codex to decompose a task into parallel worker lanes.
+把这个 skill 安装到你的 Codex profile 里；当你想让 Codex 按并行 lane 拆任务时，直接调用 `$swarm-mode`。
