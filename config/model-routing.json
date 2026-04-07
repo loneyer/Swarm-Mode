@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "default_profile": "high_end",
+  "profile_aliases": {
+    "high_end": ["default", "high_end", "full", "1档", "模式1", "蜂群模式1档", "启用蜂群模式1档", "开启蜂群模式1", "开启蜂群模式1档"],
+    "cost_saver": ["cost_saver", "economy", "budget", "2档", "模式2", "蜂群模式2档", "启用蜂群模式2档", "开启蜂群模式2", "开启蜂群模式2档"],
+    "ultra_cost_saver": ["ultra_cost_saver", "ultra", "super_budget", "super_economy", "3档", "模式3", "蜂群模式3档", "启用蜂群模式3档", "开启蜂群模式3", "开启蜂群模式3档"]
+  },
+  "task_kinds": {
+    "orchestrator": "主编排、最终集成、风险把关、跨 lane 冲突裁决",
+    "architecture": "方案设计、fix shape 选择、跨模块决策、复杂权衡",
+    "implementation_complex": "多文件实现、跨模块改动、隐式设计判断较多的编码任务",
+    "implementation_bounded": "单文件或明确写域、需求清楚、易回滚和验证的编码任务",
+    "test_strategy": "测试设计、失败归因、验收口径定义、回归策略选择",
+    "test_execution": "按既定命令执行测试并整理结果，不拥有最终判断",
+    "codebase_discovery": "定位文件、读符号、整理结构、回答单个受限问题",
+    "debug_probe": "复现、日志阅读、堆栈归类、一次性探针、快速验证",
+    "review_targeted": "针对小 diff 或明确清单做定向检查，不负责最终评审结论",
+    "review_authoritative": "最终 code review 结论、风险排序、跨证据综合",
+    "docs_summary": "文档摘要、迁移说明、变更记录、操作手册整理",
+    "data_extraction": "模板化提取、分类、转写、单源信息搬运、格式整理"
+  },
+  "profiles": {
+    "high_end": {
+      "description": "1档=高配。保留当前保守策略，绝大多数涉及代码判断的 lane 仍交给 gpt-5.4。",
+      "main_orchestrator_model": "gpt-5.4",
+      "task_kind_models": {
+        "orchestrator": "gpt-5.4",
+        "architecture": "gpt-5.4",
+        "implementation_complex": "gpt-5.4",
+        "implementation_bounded": "gpt-5.4",
+        "test_strategy": "gpt-5.4",
+        "test_execution": "gpt-5.4",
+        "codebase_discovery": "gpt-5.4",
+        "debug_probe": "gpt-5.3-codex",
+        "review_targeted": "gpt-5.4",
+        "review_authoritative": "gpt-5.4",
+        "docs_summary": "gpt-5.2",
+        "data_extraction": "gpt-5.2"
+      }
+    },
+    "cost_saver": {
+      "description": "2档=省流。把 fix shape 已锁定、可验证、低歧义的实现 lane 更多下放给 gpt-5.3-codex；最终判断类 lane 继续保留给 gpt-5.4。",
+      "main_orchestrator_model": "gpt-5.4",
+      "task_kind_models": {
+        "orchestrator": "gpt-5.4",
+        "architecture": "gpt-5.4",
+        "implementation_complex": "gpt-5.3-codex",
+        "implementation_bounded": "gpt-5.3-codex",
+        "test_strategy": "gpt-5.4",
+        "test_execution": "gpt-5.3-codex",
+        "codebase_discovery": "gpt-5.3-codex",
+        "debug_probe": "gpt-5.3-codex",
+        "review_targeted": "gpt-5.3-codex",
+        "review_authoritative": "gpt-5.4",
+        "docs_summary": "gpt-5.2",
+        "data_extraction": "gpt-5.2"
+      }
+    },
+    "ultra_cost_saver": {
+      "description": "3档=超级省流。主 orchestrator、架构判断和最终评审继续交给 gpt-5.4；复杂实现和前提清晰的测试策略优先交给 gpt-5.3-codex，其余窄范围、模板化、只读且易验证的 lane 尽量继续下放。",
+      "main_orchestrator_model": "gpt-5.4",
+      "task_kind_models": {
+        "orchestrator": "gpt-5.4",
+        "architecture": "gpt-5.4",
+        "implementation_complex": "gpt-5.3-codex",
+        "implementation_bounded": "gpt-5.3-codex",
+        "test_strategy": "gpt-5.3-codex",
+        "test_execution": "gpt-5.2",
+        "codebase_discovery": "gpt-5.2",
+        "debug_probe": "gpt-5.3-codex",
+        "review_targeted": "gpt-5.2",
+        "review_authoritative": "gpt-5.4",
+        "docs_summary": "gpt-5.2",
+        "data_extraction": "gpt-5.2"
+      }
+    }
+  },
+  "hard_escalation_to_gpt_5_4": [
+    "需要在多个实现方案中做取舍，或 fix shape 还不清楚",
+    "需要解释或裁决测试失败原因，而不是只转录结果",
+    "需要给出最终 code review 结论、风险排序或上线判断",
+    "涉及安全、权限、支付、隐私、数据迁移、删除、并发、一致性或性能关键路径",
+    "需要综合多个来源的冲突证据，或替其他 worker 做最终整合",
+    "lane 从只读或探针转成持久代码修改，且修改不再是显式、窄范围、脚本化步骤",
+    "跨文件或跨模块的改动范围在执行中继续膨胀",
+    "需求、验收口径或外部依赖仍存在明显歧义"
+  ],
+  "hard_floor_for_gpt_5_2": [
+    "不得拥有最终代码修改权",
+    "不得负责方案选择、冲突裁决、测试设计或最终评审结论",
+    "优先单源、模板化、输出格式明确、容易人工或脚本验证"
+  ],
+  "agent_role_policy": {
+    "explorer_only_for_models": ["gpt-5.4"],
+    "fallback_role_order_for_non_gpt_5_4": ["worker", "default"],
+    "notes": [
+      "Codex Desktop 当前存在 explorer 角色可能忽略非 gpt-5.4 model override 的宿主问题。",
+      "如果 lane 最终锁定模型不是 gpt-5.4，则禁止使用 explorer，自动改派 worker；若 worker 形态不合适，再退回 default。"
+    ]
+  },
+  "cost_saver_guidance": [
+    "优先把代码搜索、仓库盘点、单问题发现、日志初筛、文档整理下放",
+    "先把混合 lane 拆成 discovery、bounded implementation、focused verification、docs 等更窄的子 lane，再分别路由，避免整段任务因为混合职责而全部抬到 gpt-5.4",
+    "如果某条 lane 的最终模型不是 gpt-5.4，不要派 explorer，优先改派 worker，再按需要退回 default",
+    "当需求明确且 fix shape 已锁定时，可把单文件代码修改、已拆成明确子模块的多文件实现、已有样式内的小补丁、简单测试补齐下放给 gpt-5.3-codex",
+    "当测试对象、接口与验收口径已经明确时，测试用例设计、回归矩阵整理和检查清单补齐可优先下放给 gpt-5.3-codex；一旦转成失败归因、口径裁决或高风险判断，立即升回 gpt-5.4",
+    "任何命中 hard_escalation_to_gpt_5_4 的 lane 都要立即升回 gpt-5.4"
+  ]
+}
