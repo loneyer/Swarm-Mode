@@ -4,6 +4,8 @@ Swarm Mode is a Codex skill for swarm-style orchestration.
 
 It keeps one main orchestrator, splits work into parallel lanes, caps active workers at 30, and routes each lane through a shared model policy in `config/model-routing.json`.
 
+> Based on a secondary development of [huaqiang-huang/codex-swarm-mode-skill](https://github.com/huaqiang-huang/codex-swarm-mode-skill).
+
 ## At A Glance
 
 ```mermaid
